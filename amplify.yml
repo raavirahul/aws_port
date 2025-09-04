@@ -3,12 +3,14 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Using Node from .nvmrc (fallback 20)"
+        - echo "Use Node from .nvmrc (fallback 20)"
         - NODEVER=$(cat .nvmrc 2>/dev/null || echo "20")
         - nvm install $NODEVER
         - nvm use $NODEVER
         - node -v
-        - npm ci
+        # clean Windows lock + modules to avoid optional-deps bug
+        - rm -rf node_modules package-lock.json
+        - npm install
     build:
       commands:
         - npm run build
@@ -17,5 +19,5 @@ frontend:
     files:
       - '**/*'
   cache:
-    paths:
-      - node_modules/**/*
+    # keep cache minimal to avoid stale node_modules
+    paths: []
