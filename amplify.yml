@@ -3,6 +3,11 @@ frontend:
   phases:
     preBuild:
       commands:
+        - echo "Using Node from .nvmrc (fallback 20)"
+        - NODEVER=$(cat .nvmrc 2>/dev/null || echo "20")
+        - nvm install $NODEVER
+        - nvm use $NODEVER
+        - node -v
         - npm ci
     build:
       commands:
